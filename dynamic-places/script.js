@@ -1,34 +1,17 @@
 // getting places from APIs
 function loadPlaces(position) {
-    const params = {
-        radius: 300,    // search places not farther than this value (in meters)
-        clientId: '<your-client-id>',
-        clientSecret: '<your-client-secret>',
-        version: '20300101',    // foursquare versioning, required but unuseful for this demo
-    };
+    const endpoint = `/api/loadPlaces?lat=${position.latitude}&lon=${position.longitude}`;
 
-    // CORS Proxy to avoid CORS problems
-    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-
-    // Foursquare API (limit param: number of maximum places to fetch)
-    const endpoint = `${corsProxy}https://api.foursquare.com/v2/venues/search?intent=checkin
-        &ll=${position.latitude},${position.longitude}
-        &radius=${params.radius}
-        &client_id=${params.clientId}
-        &client_secret=${params.clientSecret}
-        &limit=30 
-        &v=${params.version}`;
     return fetch(endpoint)
-        .then((res) => {
-            return res.json()
-                .then((resp) => {
-                    return resp.response.venues;
-                })
+        .then((res) => res.json())
+        .then((venues) => {
+            return venues;
         })
         .catch((err) => {
             console.error('Error with places API', err);
-        })
-};
+        });
+}
+
 
 
 window.onload = () => {
